@@ -14,11 +14,14 @@ plt.rc('font', family='serif')
 
 
 countryName = sys.argv[1]
+year = sys.argv[2]
+thresh = sys.argv[3]
+
 production = pd.read_csv('data/Production_Crops_E_All_Data.csv',encoding = "ISO-8859-1")
-foodNutrients = pd.read_csv('data/foodNutrients.csv')
+foodNutrients = pd.read_csv('data/foodNutrients-frac.csv')
 
 
-countryCrops = [x for x in list(set(production.loc[(production['Area']==countryName)&(production['Y2017']>0),'Item'].to_list())) if x in list(servingSizes.keys())]
+countryCrops = [x for x in list(set(production.loc[(production['Area']==countryName)&(production['Y'+str(year)]>0),'Item'].to_list())) if x in list(servingSizes.keys())]
 nutrientList = list(foodNutrients)[3:-1]
 bnk = nx.OrderedGraph()
 bnk.add_nodes_from(countryCrops, bipartite=0)
@@ -29,7 +32,7 @@ weights = []
 for crop in countryCrops:
     for nutrient in nutrientList:
         weight = np.mean(foodNutrients.loc[names_table_info['FAO_name']==crop,nutrient])
-        if weight>0.01:
+        if weight>thresh:
             edges.append((crop, nutrient))
             weights.append(weight)
 
@@ -50,7 +53,7 @@ for nutrient in nutrientList:
 
 plt.axis('off')
 
-plt.title('Crop-Nutrient Network: '+countryName,fontsize=30,y=.96)
+plt.title('Crop-Nutrient Network: '+countryName+', '+year,fontsize=25,y=.96)
 # plt.savefig(countryName.lower()+'_bipartite-weighted.png',dpi=600,transparent=False,bbox_inches='tight')
-plt.savefig(countryName.lower()+'_bipartite-weighted.pdf',transparent=True,bbox_inches='tight')
+plt.savefig(countryName.lower()+'-'+year+'_bipartite-weighted.pdf',transparent=True,bbox_inches='tight')
 
