@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import sys
 import random
 import collections
+import pickle
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
 
@@ -35,24 +36,33 @@ thresh = sys.argv[3]
 
 production = pd.read_csv('data/Production_Crops_E_All_Data.csv',encoding = "ISO-8859-1")
 foodNutrients = pd.read_csv('data/foodNutrients-frac.csv')
+servingSizes = pickle.load(open('data/servingSizes.pkl','rb'))
+population = pd.read_csv('data/API_SP.POP.TOTL_DS2_en_csv_v2_63973.csv')
 
 
 countryCrops = [x for x in list(set(production.loc[(production['Area']==countryName)&(production['Y'+str(year)]>0),'Item'].to_list())) if x in list(servingSizes.keys())]
-nutrientList = list(foodNutrients)[3:-1]
+nutrientList = list(foodNutrients)[4:-1]
+
 bnk = nx.OrderedGraph()
 bnk.add_nodes_from(countryCrops, bipartite=0)
 bnk.add_nodes_from(nutrientList, bipartite=0)
-
 edges = []
 weights = []
 for crop in countryCrops:
+    newEdges = []
     for nutrient in nutrientList:
-        weight = np.mean(foodNutrients.loc[names_table_info['FAO_name']==crop,nutrient])
-        if weight>thresh:
-            edges.append((crop, nutrient))
+        weight = np.mean(foodNutrients.loc[foodNutrients['FAO_name']==crop,nutrient])
+        weight = weight * 10**6 * 10**(-2) * (1/servingSizes[crop]) / population[population['Country Name']==countryName][year].iloc[0]
+        weight = weight * np.mean(production.loc[(production['Area']==countryName)&(production['Item']==crop)]['Y'+year])
+        if weight>0.1:
+            newEdges.append((crop, nutrient, weight))
             weights.append(weight)
+        edges.extend(newEdges)
+        bnk.add_weighted_edges_from(newEdges)
+    if bnk.degree[crop] == 0:
+        bnk.remove_node(crop)
+        countryCrops = [x for x in countryCrops if x!=crop]
 
-bnk.add_edges_from(edges)
 
 curve = multicurve_unweighted(bnk,len(countryCrops),1000)
 

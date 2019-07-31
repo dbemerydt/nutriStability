@@ -46,13 +46,19 @@ bnk.add_nodes_from(nutrientList, bipartite=0)
 edges = []
 weights = []
 for crop in countryCrops:
+    newEdges = []
     for nutrient in nutrientList:
-        weight = np.mean(foodNutrients.loc[names_table_info['FAO_name']==crop,nutrient])
-        if weight>thresh:
-            edges.append((crop, nutrient))
+        weight = np.mean(foodNutrients.loc[foodNutrients['FAO_name']==crop,nutrient])
+        weight = weight * 10**6 * 10**(-2) * (1/servingSizes[crop]) / population[population['Country Name']==countryName][year].iloc[0]
+        weight = weight * np.mean(production.loc[(production['Area']==countryName)&(production['Item']==crop)]['Y'+year])
+        if weight>0.1:
+            newEdges.append((crop, nutrient, weight))
             weights.append(weight)
-
-bnk.add_edges_from(edges)
+        edges.extend(newEdges)
+        bnk.add_weighted_edges_from(newEdges)
+    if bnk.degree[crop] == 0:
+        bnk.remove_node(crop)
+        countryCrops = [x for x in countryCrops if x!=crop]
 
 curve = multicurve_unweighted(bnk,len(countryCrops),1000)
 
@@ -79,7 +85,7 @@ fig, ax = plt.subplots(figsize=(10,.4*len(countryCrops)))
 
 pos=nx.drawing.layout.bipartite_layout(bnk,countryCrops)
 # nx.draw_networkx(bnk,pos,with_labels=False,edge_color='green',width=[100*np.log10(w+1) for w in weights])
-nx.draw_networkx(bnk,pos,with_labels=False,edge_color='green',width=[20*w for w in weights])
+nx.draw_networkx(bnk,pos,with_labels=False,edge_color='green',width=[np.sqrt(w) for w in weights])
 for crop in countryCrops:
     plt.text(pos[crop][0]-.05,pos[crop][1],s=crop,color='k',fontsize=20,ha='right')
 
@@ -90,8 +96,9 @@ for nutrient in nutrientList:
 
 plt.axis('off')
 
-plt.title('Crop-Nutrient Network: '+countryName+', '+year,fontsize=25,y=.96)
-plt.savefig(countryName.lower()+'-'+year+'_bipartite-weighted.pdf',transparent=True,bbox_inches='tight')
+plt.title('Crop-Nutrient Network: '+countryName,fontsize=30,y=.96)
+# plt.savefig(countryName.lower()+'_bipartite-weighted.png',dpi=600,transparent=False,bbox_inches='tight')
+plt.savefig(countryName.lower()+'_bipartite-weighted-'+year+'.pdf',transparent=True,bbox_inches='tight')
 
 plt.close()
 

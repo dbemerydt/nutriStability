@@ -12,5 +12,9 @@
 
 - Determined serving sizes based on averaging values provided by USDA on all foods matching query (https://data.nal.usda.gov/dataset/usda-branded-food-products-database)
 
+- Corrected for production/import quantity and population size, found at https://data.worldbank.org/indicator/sp.pop.totl
+
+- 
+
 
 
