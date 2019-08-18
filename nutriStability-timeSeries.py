@@ -48,11 +48,11 @@ def multicurve_unweighted(H,lenL,numRuns):
     return((df['avg']/17).tolist())
 
 def countryStability(countryName):
-    countryCrops = [x for x in list(set(production.loc[(production['Area']==countryName)&(production['Y'+str(year)]>0),'Item'].tolist())) if x in list(servingSizes.keys())]
     nutrientList = [x for x in list(foodNutrients)[4:-1] if x!='Sodium']
 
     stabilities = []
     for year in years:
+        countryCrops = [x for x in list(set(production.loc[(production['Area']==countryName)&(production['Y'+str(year)]>0),'Item'].tolist())) if x in list(servingSizes.keys())]
 
         bnk = nx.OrderedGraph()
         bnk.add_nodes_from(countryCrops, bipartite=0)
@@ -63,13 +63,13 @@ def countryStability(countryName):
             newEdges = []
             for nutrient in nutrientList:
                 weight = np.mean(foodNutrients.loc[foodNutrients['FAO_name']==crop,nutrient])
-                weight = weight * 10**6 * 10**(-2) * (1/servingSizes[crop]) / population[population['Country Name']==countryName][year].iloc[0]
-                weight = weight * np.mean(production.loc[(production['Area']==countryName)&(production['Item']==crop)]['Y'+year])
+                weight = weight * 10**6 * 10**(-2) * (1/servingSizes[crop]) / population[population['Country Name']==countryName][str(year)].iloc[0]
+                weight = weight * np.mean(production.loc[(production['Area']==countryName)&(production['Item']==crop)]['Y'+str(year)])
                 if weight>0.1:
                     newEdges.append((crop, nutrient, weight))
                     weights.append(weight)
-                edges.extend(newEdges)
-                bnk.add_edges_from(newEdges)
+            edges.extend(newEdges)
+            bnk.add_weighted_edges_from(newEdges)
             if bnk.degree[crop] == 0:
                 bnk.remove_node(crop)
                 countryCrops = [x for x in countryCrops if x!=crop]
