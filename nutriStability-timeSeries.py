@@ -2,10 +2,20 @@
 nutriStability-timeseries -- Ben Emery 2019
 
 Computes yearly nutriStability given a country and source (P, PI, or PIE)
+Output includes yearly:
+    - Nutristability, as well as upper and lower confidence bounds.
+    - Average degree for crops, nutrients
+        (This is the average number of nutrients "contained" by crops, and the average number foods that "contain" each nutrient)
+    - Top 5 most connected (nutrient-diverse) crops
+    - Bottom 5 LEAST connected (susceptible to loss) nutrients
+    - Nutristability (mean and bounds) given the hypothetical nonexistence of each crop
 
 TO RUN FROM TERMINAL: python nutriStability-timeSeries.py $country $source
     $country is the country name 
     $source is P (production), PI (production+imports), or PIE (production+imports-exports)
+
+    example run:
+        python nutriStability-timeseries.py Liberia PI
 '''
  
 # We at least need most of these packages.
@@ -133,18 +143,18 @@ def countryStability(countryName):
 
 
         # draw curves and take integrals
-        curve,lower,upper = multicurve_unweighted(bnk,len(countryCrops),1000)    
+        curve,lower,upper = multicurve_unweighted(bnk,len(countryCrops),100)    
         stabilities_m.append(sum([curve[i]/len(curve) for i in range(len(curve))]))
         stabilities_u.append(sum([upper[i]/len(upper) for i in range(len(upper))]))
         stabilities_l.append(sum([lower[i]/len(lower) for i in range(len(lower))]))
 
 
-        `# repeat with the removal of each crop to begin with
+        # repeat with the removal of each crop to begin with
         removed_crop_stabilities={}
         for crop in countryCrops:
             bnkt = bnk.copy()
             bnkt.remove_node(crop)
-            curve,lower,upper = multicurve_unweighted(bnkt,len(countryCrops),1000)
+            curve,lower,upper = multicurve_unweighted(bnkt,len(countryCrops),100)
             s_m=(sum([curve[i]/len(curve) for i in range(len(curve))]))
             s_u=(sum([upper[i]/len(upper) for i in range(len(upper))]))
             s_l=(sum([lower[i]/len(lower) for i in range(len(lower))]))
