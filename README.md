@@ -12,10 +12,10 @@ Nutritional stability – a food system’s capacity to provide sufficient nutri
 
 The central essential script for computing nutritional stability. 
 
-### Inputs
+#### Inputs
 Takes country, source (as defined in paper, P or PI), start year, end year, as command line arguments.
 
-### Outputs
+#### Outputs
 Returns a dataframe with a row for each year containing:
 - year, 
 - mean stability, 
@@ -31,10 +31,10 @@ Returns a dataframe with a row for each year containing:
 
 A script for plotting the nutriStability curve for a particular country/year.
 
-### Inputs
+#### Inputs
 Takes country, year, and source as command line arguments.
 
-### Outputs
+#### Outputs
 Returns a plot as a pdf file with the curve and the nutristability value.
 
 
@@ -42,10 +42,10 @@ Returns a plot as a pdf file with the curve and the nutristability value.
 
 For plotting the nutriStability curve and the crop-nutrient bipartite network for a country/year.
 
-### Inputs
+#### Inputs
 Takes country, year, and source as command line arguments.
 
-### Outputs
+#### Outputs
 Returns a plot as a pdf file with the curve and the nutristability value, and a plot of the crop-nutrient bipartite network.
 
 
@@ -54,11 +54,11 @@ Returns a plot as a pdf file with the curve and the nutristability value, and a 
 
 A script for sweeping over possible link-weights in order to determine appropriate weight for further analysis.
 
-### Inputs
+#### Inputs
 
 Takes country name.
 
-### Ouputs
+#### Ouputs
 
 Saves a csv with each threshold value and the respective stability.
 
@@ -66,23 +66,23 @@ Saves a csv with each threshold value and the respective stability.
 
 Contains all datasets necessary as input to compute nutristability.
 
-### production.csv
+#### production.csv
 
 Tonnes of each crop produced by each country each year. Retrieved from FAO at http://www.fao.org/faostat/en/#data/QCL/metadata.
 
-### prodPlusImp.csv
+#### prodPlusImp.csv
 
 Sum of tonnes of each crop produced and imported by each country each year. Retrieved from FAO at http://www.fao.org/faostat/en/#data/QCL/metadata.
 
-### servingSizes.csv
+#### servingSizes.csv
 
 Serving size of each crop, retrieved from USDA at https://data.nal.usda.gov/dataset/usda-branded-food-products-database. For crops that had multiple relevant entries in the dataset, the average of all relevant serving sizes was taken. Python reads the pkl version of this.
 
-### foodNutrients-frac.csv
+#### foodNutrients-frac.csv
 
 For each food-nutrient pair, grams of nutrient per gram of food. Retrieved from GENuS model at https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0146976.
 
-### API_SP.POP.TOTL_DS2_en_csv_v2_63973.csv
+#### API_SP.POP.TOTL_DS2_en_csv_v2_63973.csv
 
 Population of each country each year. Retrieved from World Bank at https://data.worldbank.org/indicator/sp.pop.totl.
 
