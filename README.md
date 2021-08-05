@@ -4,6 +4,8 @@ Nutritional stability (AKA nutristability) is a measurement of a the stability o
 
 This repository contains the code and data used to compute these values for the our study in Nature Communications (DOI pending), including scripts for early exploratory analysis.
 
+Cite this repository:  https://zenodo.org/record/5163362#.YQvRfKlKjzc 
+
 ## Abstract:
 
 Nutritional stability – a food system’s capacity to provide sufficient nutrients despite disturbance – is an important, yet challenging to measure outcome of diversified agriculture. Using 55 years of data across 184 countries, we assemble 22,000 bipartite crop-nutrient networks to quantify nutritional stability by simulating crop and nutrient loss in a country, and assess its relationship to crop diversity across regions, over time and between imports versus in country production. We find a positive, saturating relationship between crop diversity and nutritional stability across countries, but also show that over time nutritional stability remained stagnant or decreased in all regions except Asia. These results are attributable to diminishing returns on crop diversity, with recent gains in crop diversity among crops with fewer nutrients, or with nutrients already in a country’s food system. Finally, imports are positively associated with crop diversity and nutritional stability, indicating that many countries’ nutritional stability is market exposed.
