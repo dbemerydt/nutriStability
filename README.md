@@ -80,6 +80,10 @@ Sum of tonnes of each crop produced and imported by each country each year. Retr
 
 Serving size of each crop, retrieved from USDA at https://data.nal.usda.gov/dataset/usda-branded-food-products-database. For crops that had multiple relevant entries in the dataset, the average of all relevant serving sizes was taken. Python reads the pkl version of this.
 
+#### servingSizes.csv
+
+Contains the correspondents between FAO crop names and USDA food names for the purpose of assigning serving sizes.
+
 #### foodNutrients-frac.csv
 
 For each food-nutrient pair, grams of nutrient per gram of food. Retrieved from GENuS model at https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0146976.
